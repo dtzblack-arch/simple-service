@@ -59,7 +59,7 @@ jobs:
           TAG=${GITHUB_SHA::8}
           echo "image-tag=$TAG" >> $GITHUB_OUTPUT
 
-  build-push-and-deploy:
+  build-push:
     name: Build image, push to Docker Hub, deploy to AKS
     needs: build-and-test
     runs-on: ubuntu-latest
@@ -106,7 +106,12 @@ jobs:
             --tag "$IMAGE_SHA" \
             --tag "$IMAGE_LATEST" \
             --push .
-
+  deploy:
+    name: deploy to AKS
+    needs: build-push
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -114,7 +119,7 @@ jobs:
 
       - name: Azure CLI version
         run: az --version
-        
+      
       - name: Install kubelogin (client-go credential plugin) 
         run: |
           set -euo pipefail
