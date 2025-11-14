@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: pgmicroservice
-          image: dtzblack-arch/pgmicroservice:latest
+          image: dizblake/pgmicroservice:latest
           ports:
             - containerPort: 3000
           env:
